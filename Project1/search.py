@@ -131,9 +131,29 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
+    bfs_queue = util.Queue()
+    visited, path = list(), list()
 
-    return genericSearch(problem, fringe)
+    if problem.isGoalState(problem.getStartState()):
+        return list()
+
+    bfs_queue.push((problem.getStartState(), list()))
+
+    while not bfs_queue.isEmpty():
+        position, path = bfs_queue.pop()
+        visited.append(position)
+
+        if problem.isGoalState(position):
+            return path
+
+        successors = problem.getSuccessors(position)
+
+        for successor in successors:
+            if successor[0] not in visited and successor[0] not in (
+                state[0] for state in bfs_queue.list
+            ):
+                new_path = path + [successor[1]]
+                bfs_queue.push((successor[0], new_path))
 
 
 def uniformCostSearch(problem):
