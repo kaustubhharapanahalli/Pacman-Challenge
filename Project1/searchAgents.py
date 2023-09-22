@@ -35,6 +35,7 @@ Good luck and happy searching!
 """
 
 import itertools
+import math
 import time
 
 import search
@@ -245,7 +246,7 @@ class PositionSearchProblem(search.SearchProblem):
             Directions.WEST,
         ]:
             x, y = state
-            dx, dy = Actions.directionToVector(action)
+            dx, dy = Actions.directionToVector(action)  # type: ignore
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
                 nextState = (nextx, nexty)
@@ -393,7 +394,7 @@ class CornersProblem(search.SearchProblem):
 
             x_coordinate, y_coordinate = position
 
-            x_dir, y_dir = Actions.directionToVector(action)
+            x_dir, y_dir = Actions.directionToVector(action)  # type: ignore
 
             next_x, next_y = int(x_coordinate + x_dir), int(
                 y_coordinate + y_dir
@@ -443,12 +444,22 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
-    corners = problem.corners  # These are the corner coordinates
-    walls = (
-        problem.walls
-    )  # These are the walls of the maze, as a Grid (game.py)
+    starting_position, points = state
+    points = list(points)
+    path_length = 0
 
-    "*** YOUR CODE HERE ***"
+    while len(points) != 0:
+        index, distance = None, math.inf
+        for idx, point in enumerate(points):
+            new_distance = util.manhattanDistance(starting_position, point)
+            if new_distance < distance:
+                index, distance = idx, new_distance
+
+        path_length += distance
+        starting_position = points[index]  # type: ignore
+        points.pop(index)  # type: ignore
+
+    return path_length
 
 
 class AStarCornersAgent(SearchAgent):
