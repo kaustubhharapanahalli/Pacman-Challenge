@@ -155,6 +155,8 @@ def breadthFirstSearch(problem):
                 new_path = path + [successor[1]]
                 bfs_queue.push((successor[0], new_path))
 
+    return util.raiseNotDefined()
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
