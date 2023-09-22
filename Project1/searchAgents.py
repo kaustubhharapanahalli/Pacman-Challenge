@@ -511,7 +511,7 @@ class FoodSearchProblem:
             Directions.WEST,
         ]:
             x, y = state[0]
-            dx, dy = Actions.directionToVector(direction)
+            dx, dy = Actions.directionToVector(direction)  # type: ignore
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
                 nextFood = state[1].copy()
@@ -573,7 +573,23 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     currentPosition, foodGrid = state
-    "*** YOUR CODE HERE ***"
+
+    foodGridList = foodGrid.asList()
+    problem.heuristicInfo["wallCount"] = problem.walls.count()
+
+    if problem.isGoalState(state):
+        return 0
+
+    distance = list()
+    flag = 0
+
+    for food in foodGridList:
+        distance.append(
+            mazeDistance(currentPosition, food, problem.startingGameState)
+        )
+        flag += 1
+
+    return max(distance)
 
 
 class ClosestDotSearchAgent(SearchAgent):
