@@ -195,7 +195,7 @@ def uniformCostSearch(problem):
 
                 new_previous = problem.getCostOfActions(path + [successor[1]])
 
-                if old_previous > new_previous:
+                if old_previous > new_previous:  # type: ignore
                     new_path = path + [successor[1]]
                     ucs_queue.update((successor[0], new_path), new_previous)
 
