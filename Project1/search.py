@@ -123,8 +123,8 @@ def depthFirstSearch(problem):
 
         for successor in successors:
             if successor[0] not in visited:
-                newPath = path + [successor[1]]
-                dfs_stack.push((successor[0], newPath))
+                new_path = path + [successor[1]]
+                dfs_stack.push((successor[0], new_path))
 
     return util.raiseNotDefined()
 
