@@ -17,6 +17,24 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+###############################################################################
+################################### COMMENTS ##################################
+###############################################################################
+#
+# During the implementation of the project, I referred a few materials as I
+# have listed below:
+# 1. The recommended text book,
+# 2. The current on-going course content for CS 188
+# 3. Introduction to Algorithms- fourth edition book
+# 4. Referral implementations of DFS, BFS, Dijkstra's algorithms from the
+#    reference provided in the Introduction to Algorithms book.
+# 5. Few references related to A* Search implementation on the internet. After
+#    referring the implementation, I wrote the implementation by myself.
+
+###############################################################################
+################################ END COMMENTS #################################
+###############################################################################
+
 
 class SearchProblem:
     """

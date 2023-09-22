@@ -11,6 +11,21 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+###############################################################################
+################################### COMMENTS ##################################
+###############################################################################
+#
+# Continuing the references looked at during the implementation of the project
+# from the search script,
+# 6. Went through a few more articles to better understand heuristics before
+#    implementing the functions.
+# 7. Understanding how to implement wall presence for Q5 was a bit hard
+#    initially, so googled a few aspects depending the errors I got.
+
+###############################################################################
+################################ END COMMENTS #################################
+###############################################################################
+
 
 """
 This file contains all of the agents that can be selected to control Pacman.  To
