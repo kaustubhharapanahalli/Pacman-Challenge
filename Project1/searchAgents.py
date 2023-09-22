@@ -349,24 +349,21 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
-        "*** YOUR CODE HERE ***"
+        self.startState = (self.startingPosition, self.corners)
 
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
-
-        util.raiseNotDefined()
+        return self.startState
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
-
-        util.raiseNotDefined()
+        position, unvisited_corners = state
+        return unvisited_corners == (position,)
 
     def getSuccessors(self, state):
         """
@@ -378,6 +375,7 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
+        position, unvisited_corners = state
 
         successors = []
         for action in [
@@ -393,7 +391,25 @@ class CornersProblem(search.SearchProblem):
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
+            x_coordinate, y_coordinate = position
+
+            x_dir, y_dir = Actions.directionToVector(action)
+
+            next_x, next_y = int(x_coordinate + x_dir), int(
+                y_coordinate + y_dir
+            )
+
+            wall_presence = self.walls[next_x][next_y]
+
+            if wall_presence:
+                continue
+
+            next_position = (next_x, next_y)
+            next_univisted_corners = tuple(
+                corner for corner in unvisited_corners if corner != position
+            )
+            next_state = (next_position, next_univisted_corners)
+            successors.append((next_state, action, 1))
 
         self._expanded += 1  # DO NOT CHANGE
         return successors
