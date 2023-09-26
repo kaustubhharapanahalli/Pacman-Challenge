@@ -12,9 +12,11 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-from graphicsUtils import *
-import math, time
+import math
+import time
+
 from game import Directions
+from graphicsUtils import *
 
 ###########################
 #  GRAPHICS DISPLAY CODE  #
@@ -668,6 +670,7 @@ SAVE_POSTSCRIPT = False
 POSTSCRIPT_OUTPUT_DIR = 'frames'
 FRAME_NUMBER = 0
 import os
+
 
 def saveFrame():
     "Saves the current graphical output as a postscript file"
