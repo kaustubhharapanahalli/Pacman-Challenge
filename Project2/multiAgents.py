@@ -41,6 +41,10 @@ class ReflexAgent(Agent):
         # Collect legal moves and successor states
         legalMoves = gameState.getLegalActions()
 
+        if "Stop" in legalMoves:
+            stop_index = legalMoves.index("Stop")
+            legalMoves.pop(stop_index)
+
         # Choose one of the best actions
         scores = [
             self.evaluationFunction(gameState, action) for action in legalMoves
@@ -57,7 +61,11 @@ class ReflexAgent(Agent):
 
         return legalMoves[chosenIndex]
 
-    def evaluationFunction(self, currentGameState, action):
+    def evaluationFunction(
+        self,
+        currentGameState,
+        action,
+    ):
         """
         Design a better evaluation function here.
 
@@ -77,15 +85,45 @@ class ReflexAgent(Agent):
         newPos = successorGameState.getPacmanPosition()
         newFood = successorGameState.getFood()
         newGhostStates = successorGameState.getGhostStates()
-        newScaredTimes = [
-            ghostState.scaredTimer for ghostState in newGhostStates
-        ]
 
-        "*** YOUR CODE HERE ***"
+        # Variables to compute the build a reward mechanism (kind of) for
+        # defining the next state of pacman. Here we define three variables
+        # which are for location of the closest food pellet when taking that
+        # particular action (minimum distance to food), what is the distance
+        # from the ghost and is the ghost within 1 location distance from the
+        # pacman.
+        (
+            minimum_distance_to_ghost,
+            minimum_distance_to_food,
+            ghost_closeness,
+        ) = (1, -1, 0)
+
+        # Computing the distance of the agent to the ghost and making sure that
+        # the agent does not hit the ghosts using ghost closeness metric.
+        for ghost_location in successorGameState.getGhostPositions():
+            computed_distance = util.manhattanDistance(newPos, ghost_location)
+            minimum_distance_to_ghost += computed_distance
+            if computed_distance <= 1:
+                ghost_closeness = 1
+
+        # Computing the distance of the agent to the food pellet.
         for food in newFood.asList():
-            distances = [manhattanDistance(newPos, food)]
-        return max(max(newScaredTimes), min(distances))
-        return successorGameState.getScore() + max(newScaredTimes)
+            distances = util.manhattanDistance(newPos, food)
+            if (
+                minimum_distance_to_food >= distances
+                or minimum_distance_to_food == -1
+            ):
+                minimum_distance_to_food = distances
+
+        # Because we want the reward for the closest food to be higher, we
+        # compute the fraction of the values, as max distance would be higher
+        # numerically than minimum distances.
+        return (
+            successorGameState.getScore()
+            + (1 / minimum_distance_to_food)
+            - (1 / minimum_distance_to_ghost)
+            - ghost_closeness
+        )
 
 
 def scoreEvaluationFunction(currentGameState):
