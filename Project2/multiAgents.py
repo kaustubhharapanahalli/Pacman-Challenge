@@ -188,12 +188,19 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
 
         def compute_min(game_state, agent_index, depth):
+            # Obtain the necessary parameters for the computation of the min
+            # function.
             agent_count = game_state.getNumAgents()
             successor_actions = game_state.getLegalActions(agent_index)
 
+            # If there are no legal actions in the given state, return the
+            # computed evaluation score to generate the output for the game.
             if not successor_actions:
                 return self.evaluationFunction(game_state)
 
+            # Compute the maximum value of the selected agent is the last one
+            # in the sequence and find the minimum of the scores computed for
+            # all possible actions presented at that state.
             if agent_index == agent_count - 1:
                 max_values = list()
                 for action in successor_actions:
@@ -206,6 +213,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
                     max_values.append(score)
                 minimum_value = min(max_values)
 
+            # Compute the minimum value of the selected agent is not the last
+            # one in the sequence and find the minimum of the scores computed
+            # for all possible actions presented at that state.
             else:
                 min_values = list()
                 for action in successor_actions:
@@ -223,13 +233,21 @@ class MinimaxAgent(MultiAgentSearchAgent):
             return minimum_value
 
         def compute_max(game_state, depth):
+            # Start the computaton the max function with the first available
+            # agent and obtain the set of legal actions for the agent's state.
             agent_index = 0
 
             successor_actions = game_state.getLegalActions(agent_index)
 
+            # If there are no available legal actions or if the maximum depth
+            # is reached, return the computed evaluation score to generate the
+            # output for the game.
             if not successor_actions or depth == self.depth:
                 return self.evaluationFunction(game_state)
 
+            # Compute the maximum value of the selected agent in the sequence
+            # and find the maximum of the scores computed for all possible
+            # actions presented at that state.
             maximum_values = list()
             for action in successor_actions:
                 score = compute_min(
@@ -251,7 +269,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 depth=1,
             )
 
-        return max(all_actions, key=all_actions.get)
+        return max(all_actions, key=all_actions.get)  # type: ignore
 
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
