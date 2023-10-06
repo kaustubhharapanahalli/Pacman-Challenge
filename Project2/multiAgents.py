@@ -186,8 +186,72 @@ class MinimaxAgent(MultiAgentSearchAgent):
         gameState.isLose():
         Returns whether or not the game state is a losing state
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        def compute_min(game_state, agent_index, depth):
+            agent_count = game_state.getNumAgents()
+            successor_actions = game_state.getLegalActions(agent_index)
+
+            if not successor_actions:
+                return self.evaluationFunction(game_state)
+
+            if agent_index == agent_count - 1:
+                max_values = list()
+                for action in successor_actions:
+                    score = compute_max(
+                        game_state=game_state.generateSuccessor(
+                            agent_index, action
+                        ),
+                        depth=depth,
+                    )
+                    max_values.append(score)
+                minimum_value = min(max_values)
+
+            else:
+                min_values = list()
+                for action in successor_actions:
+                    score = compute_min(
+                        game_state=game_state.generateSuccessor(
+                            agent_index, action
+                        ),
+                        agent_index=agent_index + 1,
+                        depth=depth,
+                    )
+                    min_values.append(score)
+
+                minimum_value = min(min_values)
+
+            return minimum_value
+
+        def compute_max(game_state, depth):
+            agent_index = 0
+
+            successor_actions = game_state.getLegalActions(agent_index)
+
+            if not successor_actions or depth == self.depth:
+                return self.evaluationFunction(game_state)
+
+            maximum_values = list()
+            for action in successor_actions:
+                score = compute_min(
+                    game_state=game_state.generateSuccessor(0, action),
+                    agent_index=agent_index + 1,
+                    depth=depth + 1,
+                )
+                maximum_values.append(score)
+
+            return max(maximum_values)
+
+        actions = gameState.getLegalActions(0)
+        all_actions = dict()
+
+        for action in actions:
+            all_actions[action] = compute_min(
+                game_state=gameState.generateSuccessor(0, action),
+                agent_index=1,
+                depth=1,
+            )
+
+        return max(all_actions, key=all_actions.get)
 
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
