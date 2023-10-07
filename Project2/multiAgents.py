@@ -281,8 +281,95 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         """
         Returns the minimax action using self.depth and self.evaluationFunction
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Initialize alpha and beta to negative and positive infinity,
+        # respectively and define a best action and best utility values.
+        alpha = float("-inf")
+        beta = float("inf")
+        best_action = Directions.WEST
+        best_utility = float("-inf")
+
+        # Iterate through legal actions for the Pacman agent to compute the
+        # utility score fo the game state for the ghosts using alpha-beta
+        # pruning. This value is used to update the best utility and best
+        # action, and update the alpha value.
+        for action in gameState.getLegalActions(0):
+            pac_successor_state = gameState.generateSuccessor(0, action)
+            ghost_utility = self.alpha_beta_prune(
+                1, 0, pac_successor_state, alpha, beta
+            )
+
+            if ghost_utility > best_utility:
+                best_utility = ghost_utility
+                best_action = action
+
+            # If the best utility exceeds beta, prune the search and return the
+            # best utility.
+            if best_utility > beta:
+                return best_utility
+
+            alpha = max(alpha, best_utility)
+
+        return best_action
+
+    def compute_max(self, agent_index, depth, state, alpha, beta):
+        # Initialize the best score to negative infinity.
+        best_score = float("-inf")
+
+        # Iterate through legal actions for the current agent and check for any
+        # possible prunings and compute the best scores.
+        for action in state.getLegalActions(agent_index):
+            pac_successor_state = state.generateSuccessor(agent_index, action)
+            score = self.alpha_beta_prune(
+                1, depth, pac_successor_state, alpha, beta
+            )
+            best_score = max(best_score, score)
+
+            if best_score > beta:
+                return best_score
+
+            alpha = max(alpha, best_score)
+
+        return best_score
+
+    def compute_min(self, agent_index, depth, state, alpha, beta):
+        # Initialize the best score to positive infinity and determine the
+        # next possible agents. If the next agent is pacman, go one level
+        # deeper into the graph.
+        best_score = float("inf")
+        next_agent = (agent_index + 1) % state.getNumAgents()
+
+        if next_agent == 0:
+            depth += 1
+
+        # Iterate through legal actions for the current agent (ghost) and
+        # compute the minimum to find the successor after the ghosts take their
+        # next set of actions.
+        for ghost_action in state.getLegalActions(agent_index):
+            ghost_successor_state = state.generateSuccessor(
+                agent_index, ghost_action
+            )
+            score = self.alpha_beta_prune(
+                next_agent, depth, ghost_successor_state, alpha, beta
+            )
+            best_score = min(best_score, score)
+
+            if best_score < alpha:
+                return best_score
+
+            beta = min(beta, best_score)
+
+        return best_score
+
+    def alpha_beta_prune(self, agent_index, depth, state, alpha, beta):
+        # Check if the game is over, or if the search depth is reached which
+        # are the possible best cases.
+        if state.isLose() or state.isWin() or depth == self.depth:
+            return self.evaluationFunction(state)
+
+        if agent_index == 0:
+            return self.compute_max(agent_index, depth, state, alpha, beta)
+        else:
+            return self.compute_min(agent_index, depth, state, alpha, beta)
 
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
