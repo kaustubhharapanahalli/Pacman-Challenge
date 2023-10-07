@@ -395,8 +395,50 @@ def betterEvaluationFunction(currentGameState):
 
     DESCRIPTION: <write something here so we know what you did>
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    ### Using the same implementation used for Reflex action and trying how
+    ### the performance looks like.
+    # Useful information you can extract from a GameState (pacman.py)
+    newPos = currentGameState.getPacmanPosition()
+    newFood = currentGameState.getFood()
+
+    # Variables to compute the build a reward mechanism (kind of) for
+    # defining the next state of pacman. Here we define three variables
+    # which are for location of the closest food pellet when taking that
+    # particular action (minimum distance to food), what is the distance
+    # from the ghost and is the ghost within 1 location distance from the
+    # pacman.
+    (
+        minimum_distance_to_ghost,
+        minimum_distance_to_food,
+        ghost_closeness,
+    ) = (1, -1, 0)
+
+    # Computing the distance of the agent to the ghost and making sure that
+    # the agent does not hit the ghosts using ghost closeness metric.
+    for ghost_location in currentGameState.getGhostPositions():
+        computed_distance = util.manhattanDistance(newPos, ghost_location)
+        minimum_distance_to_ghost += computed_distance
+        if computed_distance <= 1:
+            ghost_closeness = 1
+
+    # Computing the distance of the agent to the food pellet.
+    for food in newFood.asList():
+        distances = util.manhattanDistance(newPos, food)
+        if (
+            minimum_distance_to_food >= distances
+            or minimum_distance_to_food == -1
+        ):
+            minimum_distance_to_food = distances
+
+    # Because we want the reward for the closest food to be higher, we
+    # compute the fraction of the values, as max distance would be higher
+    # numerically than minimum distances.
+    return (
+        currentGameState.getScore()
+        + (1 / minimum_distance_to_food)
+        - (1 / minimum_distance_to_ghost)
+        - ghost_closeness
+    )
 
 
 # Abbreviation
