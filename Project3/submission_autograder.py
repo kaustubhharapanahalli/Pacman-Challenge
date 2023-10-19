@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+
+import os
+import ssl
 from codecs import open
-import os, ssl
 
 if not os.environ.get("PYTHONHTTPSVERIFY", "") and getattr(
     ssl, "_create_unverified_context", None
@@ -28,7 +30,8 @@ Modifying or tampering with this file is a violation of course policy.
 If you're having trouble running the autograder, please contact the staff.
 ==============================================================================
 """
-import bz2, base64
+import base64
+import bz2
 
 exec(
     bz2.decompress(

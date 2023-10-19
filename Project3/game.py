@@ -20,11 +20,12 @@
 # John DeNero (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
 # For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
 
-from util import *
-import time
 import os
-import traceback
 import sys
+import time
+import traceback
+
+from util import *
 
 #######################
 # Parts worth reading #
@@ -173,14 +174,18 @@ class Grid:
     The __str__ method constructs an output that is oriented like a pacman board.
     """
 
-    def __init__(self, width, height, initialValue=False, bitRepresentation=None):
+    def __init__(
+        self, width, height, initialValue=False, bitRepresentation=None
+    ):
         if initialValue not in [False, True]:
             raise Exception("Grids can only contain booleans")
         self.CELLS_PER_INT = 30
 
         self.width = width
         self.height = height
-        self.data = [[initialValue for y in range(height)] for x in range(width)]
+        self.data = [
+            [initialValue for y in range(height)] for x in range(width)
+        ]
         if bitRepresentation:
             self._unpackBits(bitRepresentation)
 
@@ -710,7 +715,9 @@ class Game:
                         self.unmute()
                         return
                 else:
-                    observation = agent.observationFunction(self.state.deepCopy())
+                    observation = agent.observationFunction(
+                        self.state.deepCopy()
+                    )
                 self.unmute()
             else:
                 observation = self.state.deepCopy()
@@ -722,7 +729,8 @@ class Game:
                 try:
                     timed_func = TimeoutFunction(
                         agent.getAction,
-                        int(self.rules.getMoveTimeout(agentIndex)) - int(move_time),
+                        int(self.rules.getMoveTimeout(agentIndex))
+                        - int(move_time),
                     )
                     try:
                         start_time = time.time()
@@ -731,7 +739,8 @@ class Game:
                         action = timed_func(observation)
                     except TimeoutFunctionException:
                         print(
-                            "Agent %d timed out on a single move!" % agentIndex,
+                            "Agent %d timed out on a single move!"
+                            % agentIndex,
                             file=sys.stderr,
                         )
                         self.agentTimeout = True
@@ -745,7 +754,10 @@ class Game:
                         self.totalAgentTimeWarnings[agentIndex] += 1
                         print(
                             "Agent %d took too long to make a move! This is warning %d"
-                            % (agentIndex, self.totalAgentTimeWarnings[agentIndex]),
+                            % (
+                                agentIndex,
+                                self.totalAgentTimeWarnings[agentIndex],
+                            ),
                             file=sys.stderr,
                         )
                         if self.totalAgentTimeWarnings[
@@ -753,7 +765,10 @@ class Game:
                         ] > self.rules.getMaxTimeWarnings(agentIndex):
                             print(
                                 "Agent %d exceeded the maximum number of warnings: %d"
-                                % (agentIndex, self.totalAgentTimeWarnings[agentIndex]),
+                                % (
+                                    agentIndex,
+                                    self.totalAgentTimeWarnings[agentIndex],
+                                ),
                                 file=sys.stderr,
                             )
                             self.agentTimeout = True
@@ -763,9 +778,9 @@ class Game:
 
                     self.totalAgentTimes[agentIndex] += move_time
                     # print "Agent: %d, time: %f, total: %f" % (agentIndex, move_time, self.totalAgentTimes[agentIndex])
-                    if self.totalAgentTimes[agentIndex] > self.rules.getMaxTotalTime(
+                    if self.totalAgentTimes[
                         agentIndex
-                    ):
+                    ] > self.rules.getMaxTotalTime(agentIndex):
                         print(
                             "Agent %d ran out of time! (time: %1.2f)"
                             % (agentIndex, self.totalAgentTimes[agentIndex]),
@@ -788,7 +803,9 @@ class Game:
             self.moveHistory.append((agentIndex, action))
             if self.catchExceptions:
                 try:
-                    self.state = self.state.generateSuccessor(agentIndex, action)
+                    self.state = self.state.generateSuccessor(
+                        agentIndex, action
+                    )
                 except Exception as data:
                     self.mute(agentIndex)
                     self._agentCrash(agentIndex)

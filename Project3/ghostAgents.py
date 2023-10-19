@@ -12,12 +12,11 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-from game import Agent
-from game import Actions
-from game import Directions
 import random
-from util import manhattanDistance
+
 import util
+from game import Actions, Agent, Directions
+from util import manhattanDistance
 
 
 class GhostAgent(Agent):
@@ -66,7 +65,9 @@ class DirectionalGhost(GhostAgent):
         if isScared:
             speed = 0.5
 
-        actionVectors = [Actions.directionToVector(a, speed) for a in legalActions]
+        actionVectors = [
+            Actions.directionToVector(a, speed) for a in legalActions
+        ]
         newPositions = [(pos[0] + a[0], pos[1] + a[1]) for a in actionVectors]
         pacmanPosition = state.getPacmanPosition()
 

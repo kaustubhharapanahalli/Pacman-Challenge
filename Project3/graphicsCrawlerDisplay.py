@@ -22,16 +22,16 @@
 # Abbeel in Spring 2013.
 # For more info, see http://inst.eecs.berkeley.edu/~cs188/pacman/pacman.html
 
-import tkinter
-import qlearningAgents
-import time
-import threading
-import sys
-import crawler
-
 # import pendulum
 import math
+import sys
+import threading
+import time
+import tkinter
 from math import pi as PI
+
+import crawler
+import qlearningAgents
 
 robotType = "crawler"
 
@@ -104,7 +104,9 @@ class Application:
         self.alpha_minus.grid(row=1, column=3, padx=10)
 
         self.alpha = self.sigmoid(self.al)
-        self.alpha_label = tkinter.Label(win, text="Learning Rate: %.3f" % (self.alpha))
+        self.alpha_label = tkinter.Label(
+            win, text="Learning Rate: %.3f" % (self.alpha)
+        )
         self.alpha_label.grid(row=1, column=4)
 
         self.alpha_plus = tkinter.Button(
@@ -119,7 +121,9 @@ class Application:
         self.gamma_minus.grid(row=1, column=0, padx=10)
 
         self.gamma = self.sigmoid(self.ga)
-        self.gamma_label = tkinter.Label(win, text="Discount: %.3f" % (self.gamma))
+        self.gamma_label = tkinter.Label(
+            win, text="Discount: %.3f" % (self.gamma)
+        )
         self.gamma_label.grid(row=1, column=1)
 
         self.gamma_plus = tkinter.Button(
@@ -134,7 +138,9 @@ class Application:
         self.epsilon_minus.grid(row=0, column=3)
 
         self.epsilon = self.sigmoid(self.ep)
-        self.epsilon_label = tkinter.Label(win, text="Epsilon: %.3f" % (self.epsilon))
+        self.epsilon_label = tkinter.Label(
+            win, text="Epsilon: %.3f" % (self.epsilon)
+        )
         self.epsilon_label.grid(row=0, column=4)
 
         self.epsilon_plus = tkinter.Button(
@@ -148,7 +154,9 @@ class Application:
         )
         self.speed_minus.grid(row=0, column=0)
 
-        self.speed_label = tkinter.Label(win, text="Step Delay: %.5f" % (self.tickTime))
+        self.speed_label = tkinter.Label(
+            win, text="Step Delay: %.5f" % (self.tickTime)
+        )
         self.speed_label.grid(row=0, column=1)
 
         self.speed_plus = tkinter.Button(
@@ -171,10 +179,14 @@ class Application:
         # Init environment
         if robotType == "crawler":
             self.robot = crawler.CrawlingRobot(self.canvas)
-            self.robotEnvironment = crawler.CrawlingRobotEnvironment(self.robot)
+            self.robotEnvironment = crawler.CrawlingRobotEnvironment(
+                self.robot
+            )
         elif robotType == "pendulum":
             self.robot = pendulum.PendulumRobot(self.canvas)
-            self.robotEnvironment = pendulum.PendulumRobotEnvironment(self.robot)
+            self.robotEnvironment = pendulum.PendulumRobotEnvironment(
+                self.robot
+            )
         else:
             raise Exception("Unknown RobotType")
 
@@ -182,7 +194,9 @@ class Application:
         simulationFn = lambda agent: simulation.SimulationEnvironment(
             self.robotEnvironment, agent
         )
-        actionFn = lambda state: self.robotEnvironment.getPossibleActions(state)
+        actionFn = lambda state: self.robotEnvironment.getPossibleActions(
+            state
+        )
         self.learner = qlearningAgents.QLearningAgent(actionFn=actionFn)
 
         self.learner.setEpsilon(self.epsilon)
@@ -244,8 +258,12 @@ class Application:
             self.animatePolicyBox = 1
             self.canvas.create_text(x + length / 2, y + 10, text="angle")
             self.canvas.create_text(x - 30, y - length / 2, text="velocity")
-            self.canvas.create_text(x - 60, y - length / 4, text="Blue = kickLeft")
-            self.canvas.create_text(x - 60, y - length / 4 + 20, text="Red = kickRight")
+            self.canvas.create_text(
+                x - 60, y - length / 4, text="Blue = kickLeft"
+            )
+            self.canvas.create_text(
+                x - 60, y - length / 4 + 20, text="Red = kickRight"
+            )
             self.canvas.create_text(
                 x - 60, y - length / 4 + 40, text="White = doNothing"
             )
@@ -276,7 +294,9 @@ class Application:
                     dx = length / 100.0
                     dy = length / 100.0
                     x0, y0 = x + i * dx, y - j * dy
-                    self.canvas.create_rectangle(x0, y0, x0 + dx, y0 + dy, fill=color)
+                    self.canvas.create_rectangle(
+                        x0, y0, x0 + dx, y0 + dy, fill=color
+                    )
 
     def run(self):
         self.stepCount = 0

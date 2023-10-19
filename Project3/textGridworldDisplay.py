@@ -12,8 +12,9 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-import util
 from functools import reduce
+
+import util
 
 
 class TextGridworldDisplay:
@@ -223,12 +224,17 @@ def prettyPrintQValues(gridWorld, qValues, currentState=None):
                 actions = [None]
             bestQ = max([qValues[(state, action)] for action in actions])
             bestActions = [
-                action for action in actions if qValues[(state, action)] == bestQ
+                action
+                for action in actions
+                if qValues[(state, action)] == bestQ
             ]
 
             # display cell
             qStrings = dict(
-                [(action, "%.2f" % qValues[(state, action)]) for action in actions]
+                [
+                    (action, "%.2f" % qValues[(state, action)])
+                    for action in actions
+                ]
             )
             northString = ("north" in qStrings and qStrings["north"]) or " "
             southString = ("south" in qStrings and qStrings["south"]) or " "
@@ -318,7 +324,8 @@ def border(text):
 # Indenting code based on a post from George Sakkis
 # (http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/267662)
 
-import io, operator
+import io
+import operator
 
 
 def indent(
@@ -357,9 +364,14 @@ def indent(
     # columns of physical rows
     columns = list(*reduce(operator.add, logicalRows))
     # get the maximum of each column by the string length of its items
-    maxWidths = [max([len(str(item)) for item in column]) for column in columns]
+    maxWidths = [
+        max([len(str(item)) for item in column]) for column in columns
+    ]
     rowSeparator = headerChar * (
-        len(prefix) + len(postfix) + sum(maxWidths) + len(delim) * (len(maxWidths) - 1)
+        len(prefix)
+        + len(postfix)
+        + sum(maxWidths)
+        + len(delim) * (len(maxWidths) - 1)
     )
     # select the appropriate justify method
     justify = {"center": str.center, "right": str.rjust, "left": str.ljust}[
@@ -373,7 +385,10 @@ def indent(
             print(
                 prefix
                 + delim.join(
-                    [justify(str(item), width) for (item, width) in zip(row, maxWidths)]
+                    [
+                        justify(str(item), width)
+                        for (item, width) in zip(row, maxWidths)
+                    ]
                 )
                 + postfix,
                 file=output,
@@ -401,13 +416,16 @@ def wrap_always(text, width):
 # TEST OF DISPLAY CODE
 
 if __name__ == "__main__":
-    import gridworld, util
+    import gridworld
+    import util
 
     grid = gridworld.getCliffGrid3()
     print(grid.getStates())
 
     policy = dict([(state, "east") for state in grid.getStates()])
-    values = util.Counter(dict([(state, 1000.23) for state in grid.getStates()]))
+    values = util.Counter(
+        dict([(state, 1000.23) for state in grid.getStates()])
+    )
     prettyPrintValues(grid, values, policy, currentState=(0, 0))
 
     stateCrossActions = [
@@ -415,12 +433,16 @@ if __name__ == "__main__":
         for state in grid.getStates()
     ]
     qStates = reduce(lambda x, y: x + y, stateCrossActions, [])
-    qValues = util.Counter(dict([((state, action), 10.5) for state, action in qStates]))
+    qValues = util.Counter(
+        dict([((state, action), 10.5) for state, action in qStates])
+    )
     qValues = util.Counter(
         dict(
             [
                 ((state, action), 10.5)
-                for state, action in reduce(lambda x, y: x + y, stateCrossActions, [])
+                for state, action in reduce(
+                    lambda x, y: x + y, stateCrossActions, []
+                )
             ]
         )
     )

@@ -14,8 +14,8 @@
 
 "Feature extractors for Pacman game states"
 
-from game import Directions, Actions
 import util
+from game import Actions, Directions
 
 
 class FeatureExtractor:
@@ -94,7 +94,8 @@ class SimpleExtractor(FeatureExtractor):
 
         # count the number of ghosts 1-step away
         features["#-of-ghosts-1-step-away"] = sum(
-            (next_x, next_y) in Actions.getLegalNeighbors(g, walls) for g in ghosts
+            (next_x, next_y) in Actions.getLegalNeighbors(g, walls)
+            for g in ghosts
         )
 
         # if there is no danger of ghosts then add the food feature
@@ -105,6 +106,8 @@ class SimpleExtractor(FeatureExtractor):
         if dist is not None:
             # make the distance a number less than one otherwise the update
             # will diverge wildly
-            features["closest-food"] = float(dist) / (walls.width * walls.height)
+            features["closest-food"] = float(dist) / (
+                walls.width * walls.height
+            )
         features.divideAll(10.0)
         return features

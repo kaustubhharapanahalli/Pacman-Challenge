@@ -12,9 +12,10 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
+from functools import reduce
+
 import util
 from graphicsUtils import *
-from functools import reduce
 
 
 class GraphicsGridworldDisplay:
@@ -50,7 +51,9 @@ class GraphicsGridworldDisplay:
         # drawValues(self.gridworld, values, policy, currentState, message)
         sleep(0.05 / self.speed)
 
-    def displayQValues(self, agent, currentState=None, message="Agent Q-Values"):
+    def displayQValues(
+        self, agent, currentState=None, message="Agent Q-Values"
+    ):
         qValues = util.Counter()
         states = self.gridworld.getStates()
         for state in states:
@@ -103,7 +106,9 @@ def drawNullValues(gridworld, currentState=None, message=""):
     text(pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
 
-def drawValues(gridworld, values, policy, currentState=None, message="State Values"):
+def drawValues(
+    gridworld, values, policy, currentState=None, message="State Values"
+):
     grid = gridworld.grid
     blank()
     valueList = [values[state] for state in gridworld.getStates()] + [0.0]
@@ -142,7 +147,9 @@ def drawValues(gridworld, values, policy, currentState=None, message="State Valu
     text(pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
 
-def drawQValues(gridworld, qValues, currentState=None, message="State-Action Q-Values"):
+def drawQValues(
+    gridworld, qValues, currentState=None, message="State-Action Q-Values"
+):
     grid = gridworld.grid
     blank()
     stateCrossActions = [
@@ -150,7 +157,9 @@ def drawQValues(gridworld, qValues, currentState=None, message="State-Action Q-V
         for state in gridworld.getStates()
     ]
     qStates = reduce(lambda x, y: x + y, stateCrossActions, [])
-    qValueList = [qValues[(state, action)] for state, action in qStates] + [0.0]
+    qValueList = [qValues[(state, action)] for state, action in qStates] + [
+        0.0
+    ]
     minValue = min(qValueList)
     maxValue = max(qValueList)
     for x in range(grid.width):
@@ -164,7 +173,9 @@ def drawQValues(gridworld, qValues, currentState=None, message="State-Action Q-V
                 actions = [None]
             bestQ = max([qValues[(state, action)] for action in actions])
             bestActions = [
-                action for action in actions if qValues[(state, action)] == bestQ
+                action
+                for action in actions
+                if qValues[(state, action)] == bestQ
             ]
 
             q = util.Counter()
@@ -192,7 +203,9 @@ def drawQValues(gridworld, qValues, currentState=None, message="State-Action Q-V
                     isCurrent,
                 )
             else:
-                drawSquareQ(x, y, q, minValue, maxValue, valStrings, actions, isCurrent)
+                drawSquareQ(
+                    x, y, q, minValue, maxValue, valStrings, actions, isCurrent
+                )
     pos = to_screen(((grid.width - 1.0) / 2.0, -0.8))
     text(pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
@@ -208,13 +221,29 @@ def drawNullSquare(grid, x, y, isObstacle, isTerminal, isCurrent):
         square_color = OBSTACLE_COLOR
 
     (screen_x, screen_y) = to_screen((x, y))
-    square((screen_x, screen_y), 0.5 * GRID_SIZE, color=square_color, filled=1, width=1)
+    square(
+        (screen_x, screen_y),
+        0.5 * GRID_SIZE,
+        color=square_color,
+        filled=1,
+        width=1,
+    )
 
-    square((screen_x, screen_y), 0.5 * GRID_SIZE, color=EDGE_COLOR, filled=0, width=3)
+    square(
+        (screen_x, screen_y),
+        0.5 * GRID_SIZE,
+        color=EDGE_COLOR,
+        filled=0,
+        width=3,
+    )
 
     if isTerminal and not isObstacle:
         square(
-            (screen_x, screen_y), 0.4 * GRID_SIZE, color=EDGE_COLOR, filled=0, width=2
+            (screen_x, screen_y),
+            0.4 * GRID_SIZE,
+            color=EDGE_COLOR,
+            filled=0,
+            width=2,
         )
         text(
             (screen_x, screen_y),
@@ -240,18 +269,36 @@ def drawNullSquare(grid, x, y, isObstacle, isTerminal, isCurrent):
     #   text( (screen_x, screen_y), text_color, valStr, "Courier", 24, "bold", "c")
 
 
-def drawSquare(x, y, val, min, max, valStr, action, isObstacle, isTerminal, isCurrent):
+def drawSquare(
+    x, y, val, min, max, valStr, action, isObstacle, isTerminal, isCurrent
+):
     square_color = getColor(val, min, max)
 
     if isObstacle:
         square_color = OBSTACLE_COLOR
 
     (screen_x, screen_y) = to_screen((x, y))
-    square((screen_x, screen_y), 0.5 * GRID_SIZE, color=square_color, filled=1, width=1)
-    square((screen_x, screen_y), 0.5 * GRID_SIZE, color=EDGE_COLOR, filled=0, width=3)
+    square(
+        (screen_x, screen_y),
+        0.5 * GRID_SIZE,
+        color=square_color,
+        filled=1,
+        width=1,
+    )
+    square(
+        (screen_x, screen_y),
+        0.5 * GRID_SIZE,
+        color=EDGE_COLOR,
+        filled=0,
+        width=3,
+    )
     if isTerminal and not isObstacle:
         square(
-            (screen_x, screen_y), 0.4 * GRID_SIZE, color=EDGE_COLOR, filled=0, width=2
+            (screen_x, screen_y),
+            0.4 * GRID_SIZE,
+            color=EDGE_COLOR,
+            filled=0,
+            width=2,
         )
 
     if action == "north":
@@ -310,7 +357,15 @@ def drawSquare(x, y, val, min, max, valStr, action, isObstacle, isTerminal, isCu
         )
 
     if not isObstacle:
-        text((screen_x, screen_y), text_color, valStr, "Courier", -30, "bold", "c")
+        text(
+            (screen_x, screen_y),
+            text_color,
+            valStr,
+            "Courier",
+            -30,
+            "bold",
+            "c",
+        )
 
 
 def drawSquareQ(x, y, qVals, minVal, maxVal, valStrs, bestActions, isCurrent):
@@ -343,7 +398,13 @@ def drawSquareQ(x, y, qVals, minVal, maxVal, valStrs, bestActions, isCurrent):
             polygon((center, nw, sw), wedge_color, filled=1, smoothed=False)
             # text(w, text_color, valStr, "Courier", 8, "bold", "w")
 
-    square((screen_x, screen_y), 0.5 * GRID_SIZE, color=EDGE_COLOR, filled=0, width=3)
+    square(
+        (screen_x, screen_y),
+        0.5 * GRID_SIZE,
+        color=EDGE_COLOR,
+        filled=0,
+        width=3,
+    )
     line(ne, sw, color=EDGE_COLOR)
     line(nw, se, color=EDGE_COLOR)
 
@@ -390,7 +451,12 @@ def square(pos, size, color, filled, width):
     x, y = pos
     dx, dy = size, size
     return polygon(
-        [(x - dx, y - dy), (x - dx, y + dy), (x + dx, y + dy), (x + dx, y - dy)],
+        [
+            (x - dx, y - dy),
+            (x - dx, y + dy),
+            (x + dx, y + dy),
+            (x + dx, y - dy),
+        ],
         outlineColor=color,
         fillColor=color,
         filled=filled,

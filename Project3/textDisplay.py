@@ -72,7 +72,10 @@ class PacmanGraphics:
                 ]
                 print(
                     "%4d) P: %-8s"
-                    % (self.turn, str(pacman.nearestPoint(state.getPacmanPosition()))),
+                    % (
+                        self.turn,
+                        str(pacman.nearestPoint(state.getPacmanPosition())),
+                    ),
                     "| Score: %-5d" % state.score,
                     "| Ghosts:",
                     ghosts,

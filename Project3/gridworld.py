@@ -12,12 +12,13 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
+import optparse
 import random
 import sys
-import mdp
+
 import environment
+import mdp
 import util
-import optparse
 
 
 class Gridworld(mdp.MarkovDecisionProcess):
@@ -214,7 +215,9 @@ class GridworldEnvironment(environment.Environment):
             if rand < sum:
                 reward = self.gridWorld.getReward(state, action, nextState)
                 return (nextState, reward)
-        raise Exception("Total transition probability less than one; sample failure.")
+        raise Exception(
+            "Total transition probability less than one; sample failure."
+        )
 
     def reset(self):
         self.state = self.gridWorld.getStartState()
@@ -232,7 +235,9 @@ class Grid:
     def __init__(self, width, height, initialValue=" "):
         self.width = width
         self.height = height
-        self.data = [[initialValue for y in range(height)] for x in range(width)]
+        self.data = [
+            [initialValue for y in range(height)] for x in range(width)
+        ]
         self.terminalState = "TERMINAL_STATE"
 
     def __getitem__(self, i):
@@ -263,7 +268,10 @@ class Grid:
         return g
 
     def _getLegacyText(self):
-        t = [[self.data[x][y] for x in range(self.width)] for y in range(self.height)]
+        t = [
+            [self.data[x][y] for x in range(self.width)]
+            for y in range(self.height)
+        ]
         t.reverse()
         return t
 
@@ -454,7 +462,8 @@ def parseOptions():
         dest="noise",
         default=0.2,
         metavar="P",
-        help="How often action results in " + "unintended direction (default %default)",
+        help="How often action results in "
+        + "unintended direction (default %default)",
     )
     optParser.add_option(
         "-e",
@@ -630,11 +639,14 @@ if __name__ == "__main__":
     # GET THE AGENT
     ###########################
 
-    import valueIterationAgents, qlearningAgents
+    import qlearningAgents
+    import valueIterationAgents
 
     a = None
     if opts.agent == "value":
-        a = valueIterationAgents.ValueIterationAgent(mdp, opts.discount, opts.iters)
+        a = valueIterationAgents.ValueIterationAgent(
+            mdp, opts.discount, opts.iters
+        )
     elif opts.agent == "q":
         # env.getPossibleActions, opts.discount, opts.learningRate, opts.epsilon
         # simulationFn = lambda agent, state: simulation.GridworldSimulation(agent,state,mdp)
@@ -687,14 +699,19 @@ if __name__ == "__main__":
     ###########################
     # DISPLAY Q/V VALUES BEFORE SIMULATION OF EPISODES
     try:
-        if not opts.manual and opts.agent in ("value", "asynchvalue", "priosweepvalue"):
+        if not opts.manual and opts.agent in (
+            "value",
+            "asynchvalue",
+            "priosweepvalue",
+        ):
             if opts.valueSteps:
                 for i in range(opts.iters):
                     tempAgent = valueIterationAgents.ValueIterationAgent(
                         mdp, opts.discount, i
                     )
                     display.displayValues(
-                        tempAgent, message="VALUES AFTER " + str(i) + " ITERATIONS"
+                        tempAgent,
+                        message="VALUES AFTER " + str(i) + " ITERATIONS",
                     )
                     display.pause()
 
@@ -715,7 +732,12 @@ if __name__ == "__main__":
         if opts.manual and opts.agent == None:
             displayCallback = lambda state: display.displayNullValues(state)
         else:
-            if opts.agent in ("random", "value", "asynchvalue", "priosweepvalue"):
+            if opts.agent in (
+                "random",
+                "value",
+                "asynchvalue",
+                "priosweepvalue",
+            ):
                 displayCallback = lambda state: display.displayValues(
                     a, state, "CURRENT VALUES"
                 )
@@ -735,7 +757,9 @@ if __name__ == "__main__":
 
     # FIGURE OUT WHETHER THE USER WANTS MANUAL CONTROL (FOR DEBUGGING AND DEMOS)
     if opts.manual:
-        decisionCallback = lambda state: getUserAction(state, mdp.getPossibleActions)
+        decisionCallback = lambda state: getUserAction(
+            state, mdp.getPossibleActions
+        )
     else:
         decisionCallback = a.getAction
 
@@ -759,7 +783,8 @@ if __name__ == "__main__":
     if opts.episodes > 0:
         print()
         print(
-            "AVERAGE RETURNS FROM START STATE: " + str((returns + 0.0) / opts.episodes)
+            "AVERAGE RETURNS FROM START STATE: "
+            + str((returns + 0.0) / opts.episodes)
         )
         print()
         print()

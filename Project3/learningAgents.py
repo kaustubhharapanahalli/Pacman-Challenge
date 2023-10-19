@@ -165,7 +165,9 @@ class ReinforcementAgent(ValueEstimationAgent):
     def isInTesting(self):
         return not self.isInTraining()
 
-    def __init__(self, actionFn=None, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
+    def __init__(
+        self, actionFn=None, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1
+    ):
         """
         actionFn: Function which takes a state and returns the list of legal actions
 
@@ -215,7 +217,9 @@ class ReinforcementAgent(ValueEstimationAgent):
         """
         if not self.lastState is None:
             reward = state.getScore() - self.lastState.getScore()
-            self.observeTransition(self.lastState, self.lastAction, state, reward)
+            self.observeTransition(
+                self.lastState, self.lastAction, state, reward
+            )
         return state
 
     def registerInitialState(self, state):
@@ -228,7 +232,9 @@ class ReinforcementAgent(ValueEstimationAgent):
         Called by Pacman game at the terminal state
         """
         deltaReward = state.getScore() - self.lastState.getScore()
-        self.observeTransition(self.lastState, self.lastAction, state, deltaReward)
+        self.observeTransition(
+            self.lastState, self.lastAction, state, deltaReward
+        )
         self.stopEpisode()
 
         # Make sure we have this var
@@ -262,7 +268,10 @@ class ReinforcementAgent(ValueEstimationAgent):
                 "\tAverage Rewards for last %d episodes: %.2f"
                 % (NUM_EPS_UPDATE, windowAvg)
             )
-            print("\tEpisode took %.2f seconds" % (time.time() - self.episodeStartTime))
+            print(
+                "\tEpisode took %.2f seconds"
+                % (time.time() - self.episodeStartTime)
+            )
             self.lastWindowAccumRewards = 0.0
             self.episodeStartTime = time.time()
 

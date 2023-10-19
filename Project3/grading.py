@@ -15,11 +15,12 @@
 "Common code for autograders"
 
 import html
-import time
-import sys
 import json
+import sys
+import time
 import traceback
 from collections import defaultdict
+
 import util
 
 
@@ -101,7 +102,10 @@ class Grades:
             if self.points[q] >= self.maxes[q]:
                 completedQuestions.add(q)
 
-            print("\n### Question %s: %d/%d ###\n" % (q, self.points[q], self.maxes[q]))
+            print(
+                "\n### Question %s: %d/%d ###\n"
+                % (q, self.points[q], self.maxes[q])
+            )
 
         print("\nFinished at %d:%02d:%02d" % time.localtime()[3:6])
         print("\nProvisional grades\n==================")
@@ -109,7 +113,10 @@ class Grades:
         for q in self.questions:
             print("Question %s: %d/%d" % (q, self.points[q], self.maxes[q]))
         print("------------------")
-        print("Total: %d/%d" % (self.points.totalCount(), sum(self.maxes.values())))
+        print(
+            "Total: %d/%d"
+            % (self.points.totalCount(), sum(self.maxes.values()))
+        )
         if bonusPic and self.points.totalCount() == 25:
             print(
                 """
@@ -197,7 +204,10 @@ to follow your instructor's guidelines to receive credit on your project.
         total_score = sum(self.points.values())
         out_dct["score"] = total_score
         out_dct["max_score"] = total_possible
-        out_dct["output"] = "Total score (%d / %d)" % (total_score, total_possible)
+        out_dct["output"] = "Total score (%d / %d)" % (
+            total_score,
+            total_possible,
+        )
 
         # individual tests
         tests_out = []
@@ -210,7 +220,9 @@ to follow your instructor's guidelines to receive credit on your project.
             test_out["max_score"] = self.maxes[name]
             # others
             is_correct = self.points[name] >= self.maxes[name]
-            test_out["output"] = "  Question {num} ({points}/{max}) {correct}".format(
+            test_out[
+                "output"
+            ] = "  Question {num} ({points}/{max}) {correct}".format(
                 num=(name[1] if len(name) == 2 else name),
                 points=test_out["score"],
                 max=test_out["max_score"],
@@ -240,7 +252,9 @@ to follow your instructor's guidelines to receive credit on your project.
             Total score ({total_score} / {total_possible})
         </h3>
     """.format(
-            total_score=total_score, total_possible=total_possible, checkOrX=checkOrX
+            total_score=total_score,
+            total_possible=total_possible,
+            checkOrX=checkOrX,
         )
         edxOutput.write(header)
 

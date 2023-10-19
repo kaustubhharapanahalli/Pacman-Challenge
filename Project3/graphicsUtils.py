@@ -12,14 +12,14 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-import sys
 import math
+import os.path
 import random
 import string
+import sys
 import time
-import types
 import tkinter
-import os.path
+import types
 
 _Windows = sys.platform == "win32"  # True if on Win95/98/NT
 
@@ -59,7 +59,9 @@ def sleep(secs):
         _root_window.mainloop()
 
 
-def begin_graphics(width=640, height=480, color=formatColor(0, 0, 0), title=None):
+def begin_graphics(
+    width=640, height=480, color=formatColor(0, 0, 0), title=None
+):
     global _root_window, _canvas, _canvas_x, _canvas_y, _canvas_xs, _canvas_ys, _bg_color
 
     # Check for duplicate call
@@ -141,8 +143,15 @@ def wait_for_click():
 
 
 def draw_background():
-    corners = [(0, 0), (0, _canvas_ys), (_canvas_xs, _canvas_ys), (_canvas_xs, 0)]
-    polygon(corners, _bg_color, fillColor=_bg_color, filled=True, smoothed=False)
+    corners = [
+        (0, 0),
+        (0, _canvas_ys),
+        (_canvas_xs, _canvas_ys),
+        (_canvas_xs, 0),
+    ]
+    polygon(
+        corners, _bg_color, fillColor=_bg_color, filled=True, smoothed=False
+    )
 
 
 def _destroy_window(event=None):
@@ -179,7 +188,13 @@ def clear_screen(background=None):
 
 
 def polygon(
-    coords, outlineColor, fillColor=None, filled=1, smoothed=1, behind=0, width=1
+    coords,
+    outlineColor,
+    fillColor=None,
+    filled=1,
+    smoothed=1,
+    behind=0,
+    width=1,
 ):
     c = []
     for coord in coords:
@@ -203,7 +218,9 @@ def square(pos, r, color, filled=1, behind=0):
     return polygon(coords, color, color, filled, 0, behind=behind)
 
 
-def circle(pos, r, outlineColor, fillColor, endpoints=None, style="pieslice", width=2):
+def circle(
+    pos, r, outlineColor, fillColor, endpoints=None, style="pieslice", width=2
+):
     x, y = pos
     x0, x1 = x - r - 1, x + r
     y0, y1 = y - r - 1, y + r
@@ -266,7 +283,15 @@ def edit(id, *args):
     _canvas.itemconfigure(id, **dict(args))
 
 
-def text(pos, color, contents, font="Helvetica", size=12, style="normal", anchor="nw"):
+def text(
+    pos,
+    color,
+    contents,
+    font="Helvetica",
+    size=12,
+    style="normal",
+    anchor="nw",
+):
     global _canvas_x, _canvas_y
     x, y = pos
     font = (font, str(size), style)
@@ -346,7 +371,8 @@ def _clear_keys(event=None):
 
 
 def keys_pressed(
-    d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkinter._tkinter.DONT_WAIT
+    d_o_e=lambda arg: _root_window.dooneevent(arg),
+    d_w=tkinter._tkinter.DONT_WAIT,
 ):
     d_o_e(d_w)
     if _got_release:
@@ -373,7 +399,9 @@ def wait_for_keys():
 
 
 def remove_from_screen(
-    x, d_o_e=lambda arg: _root_window.dooneevent(arg), d_w=tkinter._tkinter.DONT_WAIT
+    x,
+    d_o_e=lambda arg: _root_window.dooneevent(arg),
+    d_w=tkinter._tkinter.DONT_WAIT,
 ):
     _canvas.delete(x)
     d_o_e(d_w)

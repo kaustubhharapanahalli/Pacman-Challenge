@@ -27,12 +27,12 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-import sys
-import inspect
-import heapq
-import random
-import io
 import functools
+import heapq
+import inspect
+import io
+import random
+import sys
 
 
 class Experiences(object):

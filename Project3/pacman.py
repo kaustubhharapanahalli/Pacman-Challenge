@@ -39,19 +39,16 @@ code to run a game.  This file is divided into three sections:
 To play your first game, type 'python pacman.py' from the command line.
 The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).  Have fun!
 """
-from game import GameStateData
-from game import Game
-from game import Directions
-from game import Actions
-from util import nearestPoint
-from util import manhattanDistance
-import util
-import layout
-import sys
-import types
-import time
-import random
 import os
+import random
+import sys
+import time
+import types
+
+import layout
+import util
+from game import Actions, Directions, Game, GameStateData
+from util import manhattanDistance, nearestPoint
 
 ###################################################
 # YOUR INTERFACE TO THE PACMAN WORLD: A GameState #
@@ -120,7 +117,9 @@ class GameState:
 
         # Time passes
         if agentIndex == 0:
-            state.data.scoreChange += -TIME_PENALTY  # Penalty for waiting around
+            state.data.scoreChange += (
+                -TIME_PENALTY
+            )  # Penalty for waiting around
         else:
             GhostRules.decrementTimer(state.data.agentStates[agentIndex])
 
@@ -376,7 +375,9 @@ class PacmanRules:
 
         # Update Configuration
         vector = Actions.directionToVector(action, PacmanRules.PACMAN_SPEED)
-        pacmanState.configuration = pacmanState.configuration.generateSuccessor(vector)
+        pacmanState.configuration = (
+            pacmanState.configuration.generateSuccessor(vector)
+        )
 
         # Eat
         next = pacmanState.configuration.getPosition()
@@ -424,7 +425,9 @@ class GhostRules:
         reach a dead end, but can turn 90 degrees at intersections.
         """
         conf = state.getGhostState(ghostIndex).configuration
-        possibleActions = Actions.getPossibleActions(conf, state.data.layout.walls)
+        possibleActions = Actions.getPossibleActions(
+            conf, state.data.layout.walls
+        )
         reverse = Actions.reverseDirection(conf.direction)
         if Directions.STOP in possibleActions:
             possibleActions.remove(Directions.STOP)
@@ -444,14 +447,18 @@ class GhostRules:
         if ghostState.scaredTimer > 0:
             speed /= 2.0
         vector = Actions.directionToVector(action, speed)
-        ghostState.configuration = ghostState.configuration.generateSuccessor(vector)
+        ghostState.configuration = ghostState.configuration.generateSuccessor(
+            vector
+        )
 
     applyAction = staticmethod(applyAction)
 
     def decrementTimer(ghostState):
         timer = ghostState.scaredTimer
         if timer == 1:
-            ghostState.configuration.pos = nearestPoint(ghostState.configuration.pos)
+            ghostState.configuration.pos = nearestPoint(
+                ghostState.configuration.pos
+            )
         ghostState.scaredTimer = max(0, timer - 1)
 
     decrementTimer = staticmethod(decrementTimer)
@@ -487,7 +494,10 @@ class GhostRules:
     collide = staticmethod(collide)
 
     def canKill(pacmanPosition, ghostPosition):
-        return manhattanDistance(ghostPosition, pacmanPosition) <= COLLISION_TOLERANCE
+        return (
+            manhattanDistance(ghostPosition, pacmanPosition)
+            <= COLLISION_TOLERANCE
+        )
 
     canKill = staticmethod(canKill)
 
@@ -748,7 +758,9 @@ def loadAgent(pacman, nographics):
     for moduleDir in pythonPathDirs:
         if not os.path.isdir(moduleDir):
             continue
-        moduleNames = [f for f in os.listdir(moduleDir) if f.endswith("gents.py")]
+        moduleNames = [
+            f for f in os.listdir(moduleDir) if f.endswith("gents.py")
+        ]
         for modulename in moduleNames:
             try:
                 module = __import__(modulename[:-3])
@@ -760,12 +772,14 @@ def loadAgent(pacman, nographics):
                         "Using the keyboard requires graphics (not text display)"
                     )
                 return getattr(module, pacman)
-    raise Exception("The agent " + pacman + " is not specified in any *Agents.py.")
+    raise Exception(
+        "The agent " + pacman + " is not specified in any *Agents.py."
+    )
 
 
 def replayGame(layout, actions, display):
-    import pacmanAgents
     import ghostAgents
+    import pacmanAgents
 
     rules = ClassicGameRules()
     agents = [pacmanAgents.GreedyAgent()] + [
@@ -823,8 +837,8 @@ def runGames(
             games.append(game)
 
         if record:
-            import time
             import pickle
+            import time
 
             fname = ("recorded-game-%d" % (i + 1)) + "-".join(
                 [str(t) for t in time.localtime()[1:6]]
@@ -840,8 +854,14 @@ def runGames(
         winRate = wins.count(True) / float(len(wins))
         print("Average Score:", sum(scores) / float(len(scores)))
         print("Scores:       ", ", ".join([str(score) for score in scores]))
-        print("Win Rate:      %d/%d (%.2f)" % (wins.count(True), len(wins), winRate))
-        print("Record:       ", ", ".join([["Loss", "Win"][int(w)] for w in wins]))
+        print(
+            "Win Rate:      %d/%d (%.2f)"
+            % (wins.count(True), len(wins), winRate)
+        )
+        print(
+            "Record:       ",
+            ", ".join([["Loss", "Win"][int(w)] for w in wins]),
+        )
 
     return games
 

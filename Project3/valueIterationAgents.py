@@ -26,10 +26,11 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-import mdp, util
-
-from learningAgents import ValueEstimationAgent
 import collections
+
+import mdp
+import util
+from learningAgents import ValueEstimationAgent
 
 
 class ValueIterationAgent(ValueEstimationAgent):

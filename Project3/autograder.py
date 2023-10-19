@@ -32,7 +32,9 @@ except:
 
 # register arguments and set default values
 def readCommand(argv):
-    parser = optparse.OptionParser(description="Run public tests on student code")
+    parser = optparse.OptionParser(
+        description="Run public tests on student code"
+    )
     parser.set_defaults(
         generateSolutions=False,
         edxOutput=False,
@@ -280,7 +282,9 @@ def getDepends(testParser, testRoot, question):
 
 # get list of questions to grade
 def getTestSubdirs(testParser, testRoot, questionToGrade):
-    problemDict = testParser.TestParser(os.path.join(testRoot, "CONFIG")).parse()
+    problemDict = testParser.TestParser(
+        os.path.join(testRoot, "CONFIG")
+    ).parse()
     if questionToGrade != None:
         questions = getDepends(testParser, testRoot, questionToGrade)
         if len(questions) > 1:
@@ -334,7 +338,11 @@ def evaluate(
         questionDicts[q] = questionDict
 
         # load test cases into question
-        tests = [t for t in os.listdir(subdir_path) if re.match("[^#~.].*\.test\Z", t)]
+        tests = [
+            t
+            for t in os.listdir(subdir_path)
+            if re.match("[^#~.].*\.test\Z", t)
+        ]
         tests = [re.match("(.*)\.test\Z", t).group(1) for t in tests]
         for t in sorted(tests):
             test_file = os.path.join(subdir_path, "%s.test" % t)
