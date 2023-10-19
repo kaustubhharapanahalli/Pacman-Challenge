@@ -26,8 +26,14 @@ import util
 class Grades:
     "A data structure for project grades, along with formatting code to display them"
 
-    def __init__(self, projectName, questionsAndMaxesList,
-                 gsOutput=False, edxOutput=False, muteOutput=False):
+    def __init__(
+        self,
+        projectName,
+        questionsAndMaxesList,
+        gsOutput=False,
+        edxOutput=False,
+        muteOutput=False,
+    ):
         """
         Defines the grading scheme for a project
           projectName: project name
@@ -47,7 +53,7 @@ class Grades:
         self.prereqs = defaultdict(set)
 
         # print 'Autograder transcript for %s' % self.project
-        print('Starting on %d-%d at %d:%02d:%02d' % self.start)
+        print("Starting on %d-%d at %d:%02d:%02d" % self.start)
 
     def addPrereq(self, question, prereq):
         self.prereqs[question].add(prereq)
@@ -60,30 +66,34 @@ class Grades:
 
         completedQuestions = set([])
         for q in self.questions:
-            print('\nQuestion %s' % q)
-            print('=' * (9 + len(q)))
+            print("\nQuestion %s" % q)
+            print("=" * (9 + len(q)))
             print()
             self.currentQuestion = q
 
             incompleted = self.prereqs[q].difference(completedQuestions)
             if len(incompleted) > 0:
                 prereq = incompleted.pop()
-                print("""*** NOTE: Make sure to complete Question %s before working on Question %s,
+                print(
+                    """*** NOTE: Make sure to complete Question %s before working on Question %s,
 *** because Question %s builds upon your answer for Question %s.
-""" % (prereq, q, q, prereq))
+"""
+                    % (prereq, q, q, prereq)
+                )
                 continue
 
             if self.mute:
                 util.mutePrint()
             try:
                 util.TimeoutFunction(getattr(gradingModule, q), 1800)(
-                    self)  # Call the question's function
+                    self
+                )  # Call the question's function
                 # TimeoutFunction(getattr(gradingModule, q),1200)(self) # Call the question's function
             except Exception as inst:
                 self.addExceptionMessage(q, inst, traceback)
                 self.addErrorHints(exceptionMap, inst, q[1])
             except:
-                self.fail('FAIL: Terminated with a string exception.')
+                self.fail("FAIL: Terminated with a string exception.")
             finally:
                 if self.mute:
                     util.unmutePrint()
@@ -91,19 +101,18 @@ class Grades:
             if self.points[q] >= self.maxes[q]:
                 completedQuestions.add(q)
 
-            print('\n### Question %s: %d/%d ###\n' %
-                  (q, self.points[q], self.maxes[q]))
+            print("\n### Question %s: %d/%d ###\n" % (q, self.points[q], self.maxes[q]))
 
-        print('\nFinished at %d:%02d:%02d' % time.localtime()[3:6])
+        print("\nFinished at %d:%02d:%02d" % time.localtime()[3:6])
         print("\nProvisional grades\n==================")
 
         for q in self.questions:
-            print('Question %s: %d/%d' % (q, self.points[q], self.maxes[q]))
-        print('------------------')
-        print('Total: %d/%d' %
-              (self.points.totalCount(), sum(self.maxes.values())))
+            print("Question %s: %d/%d" % (q, self.points[q], self.maxes[q]))
+        print("------------------")
+        print("Total: %d/%d" % (self.points.totalCount(), sum(self.maxes.values())))
         if bonusPic and self.points.totalCount() == 25:
-            print("""
+            print(
+                """
 
                      ALL HAIL GRANDPAC.
               LONG LIVE THE GHOSTBUSTING KING.
@@ -134,11 +143,14 @@ class Grades:
                 @@@@@@@@@@@@@@@@@@@@@@@@@@
                     @@@@@@@@@@@@@@@@@@
 
-""")
-        print("""
+"""
+            )
+        print(
+            """
 Your grades are NOT yet registered.  To register your grades, make sure
 to follow your instructor's guidelines to receive credit on your project.
-""")
+"""
+        )
 
         if self.edxOutput:
             self.produceOutput()
@@ -150,31 +162,31 @@ to follow your instructor's guidelines to receive credit on your project.
         Method to format the exception message, this is more complicated because
         we need to cgi.escape the traceback but wrap the exception in a <pre> tag
         """
-        self.fail('FAIL: Exception raised: %s' % inst)
-        self.addMessage('')
-        for line in traceback.format_exc().split('\n'):
+        self.fail("FAIL: Exception raised: %s" % inst)
+        self.addMessage("")
+        for line in traceback.format_exc().split("\n"):
             self.addMessage(line)
 
     def addErrorHints(self, exceptionMap, errorInstance, questionNum):
         typeOf = str(type(errorInstance))
-        questionName = 'q' + questionNum
-        errorHint = ''
+        questionName = "q" + questionNum
+        errorHint = ""
 
         # question specific error hints
         if exceptionMap.get(questionName):
             questionMap = exceptionMap.get(questionName)
-            if (questionMap.get(typeOf)):
+            if questionMap.get(typeOf):
                 errorHint = questionMap.get(typeOf)
         # fall back to general error messages if a question specific
         # one does not exist
-        if (exceptionMap.get(typeOf)):
+        if exceptionMap.get(typeOf):
             errorHint = exceptionMap.get(typeOf)
 
         # dont include the HTML if we have no error hint
         if not errorHint:
-            return ''
+            return ""
 
-        for line in errorHint.split('\n'):
+        for line in errorHint.split("\n"):
             self.addMessage(line)
 
     def produceGradeScopeOutput(self):
@@ -183,55 +195,53 @@ to follow your instructor's guidelines to receive credit on your project.
         # total of entire submission
         total_possible = sum(self.maxes.values())
         total_score = sum(self.points.values())
-        out_dct['score'] = total_score
-        out_dct['max_score'] = total_possible
-        out_dct['output'] = "Total score (%d / %d)" % (
-            total_score, total_possible)
+        out_dct["score"] = total_score
+        out_dct["max_score"] = total_possible
+        out_dct["output"] = "Total score (%d / %d)" % (total_score, total_possible)
 
         # individual tests
         tests_out = []
         for name in self.questions:
             test_out = {}
             # test name
-            test_out['name'] = name
+            test_out["name"] = name
             # test score
-            test_out['score'] = self.points[name]
-            test_out['max_score'] = self.maxes[name]
+            test_out["score"] = self.points[name]
+            test_out["max_score"] = self.maxes[name]
             # others
             is_correct = self.points[name] >= self.maxes[name]
-            test_out['output'] = "  Question {num} ({points}/{max}) {correct}".format(
+            test_out["output"] = "  Question {num} ({points}/{max}) {correct}".format(
                 num=(name[1] if len(name) == 2 else name),
-                points=test_out['score'],
-                max=test_out['max_score'],
-                correct=('X' if not is_correct else ''),
+                points=test_out["score"],
+                max=test_out["max_score"],
+                correct=("X" if not is_correct else ""),
             )
-            test_out['tags'] = []
+            test_out["tags"] = []
             tests_out.append(test_out)
-        out_dct['tests'] = tests_out
+        out_dct["tests"] = tests_out
 
         # file output
-        with open('gradescope_response.json', 'w') as outfile:
+        with open("gradescope_response.json", "w") as outfile:
             json.dump(out_dct, outfile)
         return
 
     def produceOutput(self):
-        edxOutput = open('edx_response.html', 'w')
+        edxOutput = open("edx_response.html", "w")
         edxOutput.write("<div>")
 
         # first sum
         total_possible = sum(self.maxes.values())
         total_score = sum(self.points.values())
         checkOrX = '<span class="incorrect"/>'
-        if (total_score >= total_possible):
+        if total_score >= total_possible:
             checkOrX = '<span class="correct"/>'
         header = """
         <h3>
             Total score ({total_score} / {total_possible})
         </h3>
-    """.format(total_score=total_score,
-               total_possible=total_possible,
-               checkOrX=checkOrX
-               )
+    """.format(
+            total_score=total_score, total_possible=total_possible, checkOrX=checkOrX
+        )
         edxOutput.write(header)
 
         for q in self.questions:
@@ -240,10 +250,10 @@ to follow your instructor's guidelines to receive credit on your project.
             else:
                 name = q
             checkOrX = '<span class="incorrect"/>'
-            if (self.points[q] >= self.maxes[q]):
+            if self.points[q] >= self.maxes[q]:
                 checkOrX = '<span class="correct"/>'
-            #messages = '\n<br/>\n'.join(self.messages[q])
-            messages = "<pre>%s</pre>" % '\n'.join(self.messages[q])
+            # messages = '\n<br/>\n'.join(self.messages[q])
+            messages = "<pre>%s</pre>" % "\n".join(self.messages[q])
             output = """
         <div class="test">
           <section>
@@ -255,18 +265,19 @@ to follow your instructor's guidelines to receive credit on your project.
         </div>
         </section>
       </div>
-      """.format(q=name,
-                 max=self.maxes[q],
-                 messages=messages,
-                 checkOrX=checkOrX,
-                 points=self.points[q]
-                 )
+      """.format(
+                q=name,
+                max=self.maxes[q],
+                messages=messages,
+                checkOrX=checkOrX,
+                points=self.points[q],
+            )
             # print "*** output for Question %s " % q[1]
             # print output
             edxOutput.write(output)
         edxOutput.write("</div>")
         edxOutput.close()
-        edxOutput = open('edx_grade', 'w')
+        edxOutput = open("edx_grade", "w")
         edxOutput.write(str(self.points.totalCount()))
         edxOutput.close()
 
@@ -292,10 +303,10 @@ to follow your instructor's guidelines to receive credit on your project.
 
     def addMessage(self, message, raw=False):
         if not raw:
-                # We assume raw messages, formatted for HTML, are printed separately
+            # We assume raw messages, formatted for HTML, are printed separately
             if self.mute:
                 util.unmutePrint()
-            print('*** ' + message)
+            print("*** " + message)
             if self.mute:
                 util.mutePrint()
             message = html.escape(message)
@@ -303,7 +314,7 @@ to follow your instructor's guidelines to receive credit on your project.
 
     def addMessageToEmail(self, message):
         print("WARNING**** addMessageToEmail is deprecated %s" % message)
-        for line in message.split('\n'):
+        for line in message.split("\n"):
             pass
             # print '%%% ' + line + ' %%%'
             # self.messages[self.currentQuestion].append(line)

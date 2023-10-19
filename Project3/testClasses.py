@@ -22,13 +22,12 @@ import sys
 # maximum number of points they are worth, and are composed of a series of
 # test cases
 class Question(object):
-
     def raiseNotDefined(self):
-        print('Method not implemented: %s' % inspect.stack()[1][3])
+        print("Method not implemented: %s" % inspect.stack()[1][3])
         sys.exit(1)
 
     def __init__(self, questionDict, display):
-        self.maxPoints = int(questionDict['max_points'])
+        self.maxPoints = int(questionDict["max_points"])
         self.testCases = []
         self.display = display
 
@@ -46,9 +45,9 @@ class Question(object):
     def execute(self, grades):
         self.raiseNotDefined()
 
+
 # Question in which all test cases must be passed in order to receive credit
 class PassAllTestsQuestion(Question):
-
     def execute(self, grades):
         # TODO: is this the right way to use grades?  The autograder doesn't seem to use it.
         testsFailed = False
@@ -65,7 +64,7 @@ class PassAllTestsQuestion(Question):
 class ExtraCreditPassAllTestsQuestion(Question):
     def __init__(self, questionDict, display):
         Question.__init__(self, questionDict, display)
-        self.extraPoints = int(questionDict['extra_points'])
+        self.extraPoints = int(questionDict["extra_points"])
 
     def execute(self, grades):
         # TODO: is this the right way to use grades?  The autograder doesn't seem to use it.
@@ -80,10 +79,10 @@ class ExtraCreditPassAllTestsQuestion(Question):
             grades.assignFullCredit()
             grades.addPoints(self.extraPoints)
 
+
 # Question in which predict credit is given for test cases with a ``points'' property.
 # All other tests are mandatory and must be passed.
 class HackedPartialCreditQuestion(Question):
-
     def execute(self, grades):
         # TODO: is this the right way to use grades?  The autograder doesn't seem to use it.
         grades.assignZeroCredit()
@@ -142,9 +141,8 @@ class NumberPassedQuestion(Question):
 
 # Template modeling a generic test case
 class TestCase(object):
-
     def raiseNotDefined(self):
-        print('Method not implemented: %s' % inspect.stack()[1][3])
+        print("Method not implemented: %s" % inspect.stack()[1][3])
         sys.exit(1)
 
     def getPath(self):
@@ -153,7 +151,7 @@ class TestCase(object):
     def __init__(self, question, testDict):
         self.question = question
         self.testDict = testDict
-        self.path = testDict['path']
+        self.path = testDict["path"]
         self.messages = []
 
     def __str__(self):
@@ -173,15 +171,15 @@ class TestCase(object):
     # to get a nice hierarchical project - question - test structure,
     # then these should be moved into Question proper.
     def testPass(self, grades):
-        grades.addMessage('PASS: %s' % (self.path,))
+        grades.addMessage("PASS: %s" % (self.path,))
         for line in self.messages:
-            grades.addMessage('    %s' % (line,))
+            grades.addMessage("    %s" % (line,))
         return True
 
     def testFail(self, grades):
-        grades.addMessage('FAIL: %s' % (self.path,))
+        grades.addMessage("FAIL: %s" % (self.path,))
         for line in self.messages:
-            grades.addMessage('    %s' % (line,))
+            grades.addMessage("    %s" % (line,))
         return False
 
     # This should really be question level?
@@ -190,15 +188,22 @@ class TestCase(object):
         extraCredit = max(0, points - maxPoints)
         regularCredit = points - extraCredit
 
-        grades.addMessage('%s: %s (%s of %s points)' % (
-            "PASS" if points >= maxPoints else "FAIL", self.path, regularCredit, maxPoints))
+        grades.addMessage(
+            "%s: %s (%s of %s points)"
+            % (
+                "PASS" if points >= maxPoints else "FAIL",
+                self.path,
+                regularCredit,
+                maxPoints,
+            )
+        )
         if extraCredit > 0:
-            grades.addMessage('EXTRA CREDIT: %s points' % (extraCredit,))
+            grades.addMessage("EXTRA CREDIT: %s points" % (extraCredit,))
 
         for line in self.messages:
-            grades.addMessage('    %s' % (line,))
+            grades.addMessage("    %s" % (line,))
 
         return True
 
     def addMessage(self, message):
-        self.messages.extend(message.split('\n'))
+        self.messages.extend(message.split("\n"))

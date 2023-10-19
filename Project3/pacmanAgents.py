@@ -50,10 +50,10 @@ class GreedyAgent(Agent):
         if Directions.STOP in legal:
             legal.remove(Directions.STOP)
 
-        successors = [(state.generateSuccessor(0, action), action)
-                      for action in legal]
-        scored = [(self.evaluationFunction(state), action)
-                  for state, action in successors]
+        successors = [(state.generateSuccessor(0, action), action) for action in legal]
+        scored = [
+            (self.evaluationFunction(state), action) for state, action in successors
+        ]
         bestScore = max(scored)[0]
         bestActions = [pair[1] for pair in scored if pair[0] == bestScore]
         return random.choice(bestActions)
