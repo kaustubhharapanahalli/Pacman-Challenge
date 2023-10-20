@@ -155,7 +155,7 @@ class PacmanQAgent(QLearningAgent):
     "Exactly the same as QLearningAgent, but with different default parameters"
 
     def __init__(
-        self, epsilon=0.05, gamma=0.8, alpha=0.2, numTraining=0, **args
+        self, epsilon=0.1, gamma=0.7, alpha=0.3, numTraining=2000, **args
     ):
         """
         These default parameters can be changed from the pacman.py command line.
